@@ -13,10 +13,12 @@
   
   .screen-content{
     display: flex;
+    flex-wrap: wrap;
     text-align: center;
     justify-content: center;
     align-items: center;
-    width: 800px;
+    width: 70vw;
+    min-width: 400px;
     height: 100px;
     border: 2px solid black;
     clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
@@ -41,3 +43,7 @@
     color: rgb(37, 12, 195);
 }
 
+
+.btn{
+    background-color: rgb(37, 12, 195) !important;
+}
