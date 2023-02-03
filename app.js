@@ -13,15 +13,18 @@ let ticketPrice = 10
 getLocalDatas()
 
 const fetchData =  async () => {
-    let movieTitle = movieInput.value
-    const apiKey = 'e0861d41'
-    const url = `http://www.omdbapi.com/?t=${movieTitle}&apikey=${apiKey}`
-    
-    if(!movieTitle == "" ){
+  const movieTitle = movieInput.value.trim()
+  const apiKey = 'e0861d4'
+  const url = `http://www.omdbapi.com/?t=${movieTitle}&apikey=${apiKey}`
+  
+  if(!movieTitle == "" ){
         try{
             const responsive = await fetch(url);
             console.log(responsive)
-            if(responsive.status == 404){
+            console.log(movieTitle)
+            const data = await responsive.json()
+            console.log(data)
+            if(data.Response == 'False'){
                 return ( message.innerText = "There is no film with this name ",
                 setTimeout(() => {
                   message.innerText = "";
@@ -29,12 +32,11 @@ const fetchData =  async () => {
             }else if (!responsive.ok) {
                 throw new Error("There is an error here!!!");
               }else{
-                const data = await responsive.json()
-                console.log(data)
                 getMovieInfo(data)
-            }
-            
-        }catch{}
+            }          
+        }catch(error){
+        alert(error)
+      }
     }else {
         message.innerText = "Please enter a movie title"
           setTimeout(() => {
