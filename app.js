@@ -1,75 +1,69 @@
 //variables
-const container = document.querySelector(".container")
-const seats = document.querySelectorAll(".seat:not(.reserved)")
-const ticketAmount = document.querySelector("#count")
-const total = document.querySelector("#total")
-const movieInfoSection = document.querySelector('.movieInfo')
-const form = document.querySelector('.form')
-const movieInput = document.querySelector("#input")
+const container = document.querySelector(".container");
+const seats = document.querySelectorAll(".seat:not(.reserved)");
+const ticketAmount = document.querySelector("#count");
+const total = document.querySelector("#total");
+const movieInfoSection = document.querySelector(".movieInfo");
+const form = document.querySelector(".form");
+const movieInput = document.querySelector("#input");
 const message = document.querySelector(".message");
 
 //ticket price
-let ticketPrice = 10
+let ticketPrice = 10;
 
 //get datas from local storage
-getLocalDatas()
+getLocalDatas();
 
+//fetch
+const fetchData = async () => {
+  const movieTitle = movieInput.value.trim();
+  const apiKey = "e0861d41";
+  const url = `https://www.omdbapi.com/?t=${movieTitle}&apikey=${apiKey}`;
 
-//fetch 
-const fetchData =  async () => {
-  const movieTitle = movieInput.value.trim()
-  const apiKey = 'e0861d41'
-  const url = `http://www.omdbapi.com/?t=${movieTitle}&apikey=${apiKey}`
-  
-  if(!movieTitle == "" ){
-        try{
-            const responsive = await fetch(url);
-            const data = await responsive.json()
-            console.log(data)
-            if(data.Response == 'False'){
-                return ( message.innerText = "There is no film with this name ",
-                setTimeout(() => {
-                  message.innerText = "";
-                }, 3000));
-            }else if (!responsive.ok) {
-                throw new Error("There is an error here!!!");
-              }else{
-                getMovieInfo(data)
-            }          
-        }catch(error){
-        alert(error)
-      }
-    }else {
-        message.innerText = "Please enter a movie title"
+  if (!movieTitle == "") {
+    try {
+      const responsive = await fetch(url);
+      const data = await responsive.json();
+      console.log(data);
+      if (data.Response == "False") {
+        return (
+          (message.innerText = "There is no film with this name "),
           setTimeout(() => {
-              message.innerText ="";
-          },2000)
+            message.innerText = "";
+          }, 3000)
+        );
+      } else if (!responsive.ok) {
+        throw new Error("There is an error here!!!");
+      } else {
+        getMovieInfo(data);
       }
-    
-    
-    
-}
-
-
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    message.innerText = "Please enter a movie title";
+    setTimeout(() => {
+      message.innerText = "";
+    }, 2000);
+  }
+};
 
 // movie info
 
 const getMovieInfo = (data) => {
+  const Title = data.Title;
+  const Year = data.Released;
+  const Director = data.Director;
+  const Plot = data.Plot;
+  const Image = data.Poster;
+  const time = data.Runtime;
+  const Actors = data.Actors;
+  const Country = data.Country;
+  const Genre = data.Genre;
+  const imdbRating = data.imdbRating;
 
-    const Title = data.Title
-    const Year = data.Released 
-    const Director = data.Director 
-    const Plot = data.Plot 
-    const Image = data.Poster
-    const time = data.Runtime
-    const Actors = data.Actors
-    const Country = data.Country
-    const Genre = data.Genre
-    const imdbRating = data.imdbRating
-
-
-//create innerHTML    
-    movieInfoSection.innerHTML = `
+  //create innerHTML
+  movieInfoSection.innerHTML = `
     <div class="container container-fluid ">
     <article class="postcard light blue">
       <a class="postcard__img_link" href="#">
@@ -92,63 +86,62 @@ const getMovieInfo = (data) => {
           <li class="genre"><i class="fa-regular fa-star mr-2"></i> Rating: ${imdbRating}</li>
           <li class="duration"><i class="fas fa-clock mr-2"></i> ${time}</li>
           <li class="tag__item play blue">
-            <a href="https://www.imdb.com/find/?q=${Title}&ref_=nv_sr_sm"><i class="trailer fa-brands fa-imdb mr-2"></i>Check IMDB</a>
+            <a href="https://www.imdb.com/find/?q=${Title}&ref_=nv_sr_sm"><i class="trailer fa-brands fa-imdb mr-2"></i>IMDB</a>
           </li>
         </ul>
       </div>
     </article>
   </div>
-    `
-}
+    `;
+};
 
 // submit event
-form.addEventListener("submit", (e)=> {
-    e.preventDefault();
-    movieInput.focus();
-    fetchData();
-    form.reset();
-})
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  movieInput.focus();
+  fetchData();
+  form.reset();
+});
 
 // seat select event
 container.addEventListener("click", (e) => {
-    if(e.target.classList.contains("seat") && !e.target.classList.contains("reserved")){
-        e.target.classList.toggle("selected")
-        
-    }
-    calculateSelectedSeats ()
-    
-})
-
-
+  if (
+    e.target.classList.contains("seat") &&
+    !e.target.classList.contains("reserved")
+  ) {
+    e.target.classList.toggle("selected");
+  }
+  calculateSelectedSeats();
+});
 
 //update total and count
-function calculateSelectedSeats(){
-    const selectedSeats = document.querySelectorAll(".seats .seat.selected")
+function calculateSelectedSeats() {
+  const selectedSeats = document.querySelectorAll(".seats .seat.selected");
 
-    const selectedIndex = [...selectedSeats].map(function(seat){
-        return [...seats].indexOf(seat)
-    })
+  const selectedIndex = [...selectedSeats].map(function (seat) {
+    return [...seats].indexOf(seat);
+  });
 
-    //
-localStorage.setItem("selectedSeats", JSON.stringify(selectedIndex))
+  //
+  localStorage.setItem("selectedSeats", JSON.stringify(selectedIndex));
 
-    const selectedSeatsCount = selectedSeats.length;
-    ticketAmount.innerText = selectedSeatsCount;
-    total.innerText = selectedSeatsCount * ticketPrice
+  const selectedSeatsCount = selectedSeats.length;
+  ticketAmount.innerText = selectedSeatsCount;
+  total.innerText = selectedSeatsCount * ticketPrice;
 }
 //get data from local storage
-function getLocalDatas(){
-    const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'))
-
-    if(selectedSeats !== null && selectedSeats.length > 0){
-        seats.forEach((seat,index)=>{
-            if(selectedSeats.indexOf(index) > -1){
-                seat.classList.add('selected')
-            }
-        })
-    }
+function getLocalDatas() {
+  const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
 
 
+  //change selected seats color
+  if (selectedSeats !== null && selectedSeats.length > 0) {
+    seats.forEach((seat, index) => {
+      if (selectedSeats.indexOf(index) > -1) {
+        seat.classList.add("selected");
+      }
+    });
+  }
 }
 
-calculateSelectedSeats()
+calculateSelectedSeats();
