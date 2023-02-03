@@ -1,3 +1,4 @@
+//variables
 const container = document.querySelector(".container")
 const seats = document.querySelectorAll(".seat:not(.reserved)")
 const ticketAmount = document.querySelector("#count")
@@ -7,21 +8,22 @@ const form = document.querySelector('.form')
 const movieInput = document.querySelector("#input")
 const message = document.querySelector(".message");
 
-
+//ticket price
 let ticketPrice = 10
 
+//get datas from local storage
 getLocalDatas()
 
+
+//fetch 
 const fetchData =  async () => {
   const movieTitle = movieInput.value.trim()
-  const apiKey = 'e0861d4'
+  const apiKey = 'e0861d41'
   const url = `http://www.omdbapi.com/?t=${movieTitle}&apikey=${apiKey}`
   
   if(!movieTitle == "" ){
         try{
             const responsive = await fetch(url);
-            console.log(responsive)
-            console.log(movieTitle)
             const data = await responsive.json()
             console.log(data)
             if(data.Response == 'False'){
@@ -49,6 +51,9 @@ const fetchData =  async () => {
 }
 
 
+
+// movie info
+
 const getMovieInfo = (data) => {
 
     const Title = data.Title
@@ -63,9 +68,7 @@ const getMovieInfo = (data) => {
     const imdbRating = data.imdbRating
 
 
-
-
-    
+//create innerHTML    
     movieInfoSection.innerHTML = `
     <div class="container container-fluid ">
     <article class="postcard light blue">
@@ -98,6 +101,7 @@ const getMovieInfo = (data) => {
     `
 }
 
+// submit event
 form.addEventListener("submit", (e)=> {
     e.preventDefault();
     movieInput.focus();
@@ -105,7 +109,7 @@ form.addEventListener("submit", (e)=> {
     form.reset();
 })
 
-
+// seat select event
 container.addEventListener("click", (e) => {
     if(e.target.classList.contains("seat") && !e.target.classList.contains("reserved")){
         e.target.classList.toggle("selected")
@@ -125,6 +129,7 @@ function calculateSelectedSeats(){
         return [...seats].indexOf(seat)
     })
 
+    //
 localStorage.setItem("selectedSeats", JSON.stringify(selectedIndex))
 
     const selectedSeatsCount = selectedSeats.length;
