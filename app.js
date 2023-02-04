@@ -32,8 +32,6 @@ const fetchData = async () => {
             message.innerText = "";
           }, 3000)
         );
-      } else if (!responsive.ok) {
-        throw new Error("There is an error here!!!");
       } else {
         getMovieInfo(data);
       }
