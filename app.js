@@ -86,7 +86,7 @@ const getMovieInfo = (data) => {
           <li class="genre"><i class="fa-regular fa-star mr-2"></i> Rating: ${imdbRating}</li>
           <li class="duration"><i class="fas fa-clock mr-2"></i> ${time}</li>
           <li class="tag__item play blue">
-            <a href="https://www.imdb.com/find/?q=${Title}&ref_=nv_sr_sm"><i class="trailer fa-brands fa-imdb mr-2"></i>IMDB</a>
+            <a href="https://www.imdb.com/find/?q=${Title}&ref_=nv_sr_sm"><i class="trailer fa-brands fa-imdb mr-2"></i> IMDB</a>
           </li>
         </ul>
       </div>
