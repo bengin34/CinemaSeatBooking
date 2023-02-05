@@ -47,3 +47,11 @@
 .btn{
     background-color: rgb(37, 12, 195) !important;
 }
+
+.sampleselected{
+    color: rgb(37, 12, 195);
+}
+.sampleseat{
+    color: gray;
+  
+}
